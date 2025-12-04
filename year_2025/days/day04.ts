@@ -12,20 +12,14 @@ function day04_part1(lines: string[]): number {
                 let bottomLine = map[y + 1];
 
                 if (topLine !== undefined) {
-                    let leftTop = topLine[x - 1];
-                    let rightTop = topLine[x + 1];
-                    let middleTop = topLine[x];
-                    if (leftTop === '@') counter++;
-                    if (rightTop === '@') counter++;
-                    if (middleTop === '@') counter++;
+                    if (topLine[x - 1] === '@') counter++;
+                    if (topLine[x + 1] === '@') counter++;
+                    if (topLine[x] === '@') counter++;
                 }
                 if (bottomLine !== undefined) {
-                    let leftBottom = bottomLine[x - 1];
-                    let rightBottom = bottomLine[x + 1];
-                    let middleBottom = bottomLine[x];
-                    if (leftBottom === '@') counter++;
-                    if (rightBottom === '@') counter++;
-                    if (middleBottom === '@') counter++;
+                    if (bottomLine[x - 1] === '@') counter++;
+                    if (bottomLine[x + 1] === '@') counter++;
+                    if (bottomLine[x] === '@') counter++;
                 }
                 let left = line[x - 1];
                 let right = line[x + 1];
