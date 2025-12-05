@@ -1,4 +1,4 @@
-import {readFileAsArray, readFileAsString} from "../helpers.ts";
+import {readFileAsArray, readFileAsString} from "../utils/files.ts";
 import {day01_part1, day01_part2} from "./days/day01.ts";
 
 const startTime = performance.now();

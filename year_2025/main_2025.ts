@@ -1,4 +1,4 @@
-import {readFileAsArray, readFileAsString} from "../helpers.ts";
+import {readFileAsArray, readFileAsString} from "../utils/files.ts";
 import {day01_part1, day01_part2} from "./days/day01.ts";
 import {day02_part1, day02_part2} from "./days/day02.ts";
 import {day03_part1, day03_part2} from "./days/day03.ts";

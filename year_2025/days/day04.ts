@@ -1,4 +1,4 @@
-import {char2DArr} from "../../helpers.ts";
+import {char2DArr} from "../../utils/helpers.ts";
 
 function day04_part1(lines: string[]): number {
     let output: number = 0;
