@@ -24,35 +24,44 @@ function day05_part1(lines: string[]): number {
 function day05_part2(lines: string[]): number {
     let output: number = 0;
     let range: { from: number, to: number }[] = [];
-    // let smallestNumber = 0;
-    // let biggestNumber = 0;
     for (const line of lines) {
         const parts = line.split('-');
         if (parts.length === 2) {
             const from = Number(parts[0]);
             const to = Number(parts[1]);
-            // if (to > biggestNumber) biggestNumber = to;
             range.push({from, to});
         }
     }
-    let stop = false;
-    while (!stop) {
+    let somethingGotRemoved = false;
+    while (!somethingGotRemoved) {
         for (let i = 0; i < range.length; i++) {
+            let duplicateCounter = 0;
 
             const from = range[i]!.from;
             const to = range[i]!.to;
 
             for (let j = 0; j < range.length; j++) {
                 let compare = range[j]!;
-                // console.log(from, to, ":", compare);
-                if (compare.from === from && compare.to === to) continue;
+                if (compare.from === from && compare.to === to || from === to) {
+                    duplicateCounter++;
+                    if (duplicateCounter > 1) {
+                        range[i]!.from = 0;
+                        range[i]!.to = 0;
+                    }
+                    continue;
+                }
+                if (compare.from <= from && compare.to >= to) {
+                    range[i]!.from = 0;
+                    range[i]!.to = 0;
+                    somethingGotRemoved = true;
+                    continue;
+                }
                 if (from > compare.from && from < compare.to) {
                     if (to > compare.to) {
-                        // console.log("change:", range[j], " to:", to);
                         range[j]!.to = to;
                         range[i]!.from = 0;
                         range[i]!.to = 0;
-                        stop = true;
+                        somethingGotRemoved = true;
                     }
                 }
             }
@@ -60,12 +69,7 @@ function day05_part2(lines: string[]): number {
     }
 
     for (let rangeElement of range) {
-        // for (let i = rangeElement.from; i <= rangeElement.to; i++) {
-            // console.log(i);
-        // }
-        if (rangeElement.from !== 0 && rangeElement.to !== 0) {
-            output += rangeElement.to - rangeElement.from + 1;
-        }
+        if (rangeElement.from !== 0 && rangeElement.to !== 0) output += rangeElement.to - rangeElement.from + 1;
     }
     return output;
 }
