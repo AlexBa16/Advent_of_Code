@@ -10,5 +10,5 @@ export function readFileAsString(year: number, day: number): string {
 }
 
 export function linesToArray(input: string): string[] {
-    return input.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+    return input.split(/\r?\n/).map(l => l).filter(l => l.length > 0);
 }
