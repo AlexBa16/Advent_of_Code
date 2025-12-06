@@ -1,12 +1,10 @@
 export function char2DArr(lines: string[]): string[][] {
     let map: string[][] = [];
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i]!;
+    for (let y = 0; y < lines.length; y++) {
+        const line = lines[y]!;
         let lineArr: string[] = [];
-        for (let j = 0; j < line.length; j++) {
-            lineArr[j] = line[j]!;
-        }
-        map[i] = lineArr;
+        for (let x = 0; x < line.length; x++) lineArr[x] = line[x]!;
+        map[y] = lineArr;
     }
     return map;
 }
