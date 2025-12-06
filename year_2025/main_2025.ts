@@ -29,7 +29,7 @@ const startTime = performance.now();
 // console.log('Part2:', day05_part2(readFileAsArray(2025, 5)));
 //
 console.log("===== Day06 =====");
-console.log('Part1:', day06_part1(readFileAsArray(2025, 6)));
+// console.log('Part1:', day06_part1(readFileAsArray(2025, 6)));
 console.log('Part2:', day06_part2(readFileAsArray(2025, 6)));
 
 console.log("\n==== Runtime ====");
