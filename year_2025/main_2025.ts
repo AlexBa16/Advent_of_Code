@@ -6,6 +6,7 @@ import {day04_part1, day04_part2} from "./days/day04.ts";
 import {day05_part1, day05_part2} from "./days/day05.ts";
 import {day06_part1, day06_part2} from "./days/day06.ts";
 import {day07_part1, day07_part2} from "./days/day07.ts";
+import {day08_part1, day08_part2} from "./days/day08.ts";
 
 const startTime = performance.now();
 
@@ -33,9 +34,13 @@ const startTime = performance.now();
 // console.log('Part1:', day06_part1(readFileAsArray(2025, 6)));
 // console.log('Part2:', day06_part2(readFileAsArray(2025, 6)));
 //
-console.log("===== Day07 =====");
-console.log('Part1:', day07_part1(readFileAsArray(2025, 7)));
-console.log('Part2:', day07_part2(readFileAsArray(2025, 7)));
+// console.log("===== Day07 =====");
+// console.log('Part1:', day07_part1(readFileAsArray(2025, 7)));
+// console.log('Part2:', day07_part2(readFileAsArray(2025, 7)));
+//
+console.log("===== Day08 =====");
+console.log('Part1:', day08_part1(readFileAsArray(2025, 8)));
+console.log('Part2:', day08_part2(readFileAsArray(2025, 8)));
 
 console.log("\n==== Runtime ====");
 console.log(Number((performance.now() - startTime).toFixed(5)), "ms");
