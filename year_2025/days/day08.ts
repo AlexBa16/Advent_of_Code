@@ -17,21 +17,27 @@ function day08_part1(lines: string[]): number {
     }
     distances.sort((a, b) => a.distance - b.distance);
 
-    let counter = 10;
+    let pairsUsed = 0;
     for (const entry of distances) {
-        const [a, b] = entry.pair;
+        if (pairsUsed >= 1000) break;
 
-        if (counter < 1) break;
-        if (mergeCircuits(a!, b!)) counter--;
+        const [a, b] = entry.pair;
+        mergeCircuits(a!, b!);
+        pairsUsed++;
     }
+
 
     function mergeCircuits(a: number, b: number): boolean {
         const aIndex = findCircuitIndex(a);
         const bIndex = findCircuitIndex(b);
         if (aIndex === bIndex) return false; // already connected -> skip
-        const merged = [...circuits[aIndex]!, ...circuits[bIndex]!];
-        circuits.splice(Math.max(aIndex, bIndex), 1);
-        circuits.splice(Math.min(aIndex, bIndex), 1);
+
+        const minIndex = Math.min(aIndex, bIndex);
+        const maxIndex = Math.max(aIndex, bIndex);
+
+        const merged = [...circuits[minIndex]!, ...circuits[maxIndex]!];
+        circuits.splice(maxIndex, 1);
+        circuits.splice(minIndex, 1);
         circuits.push(merged);
         return true;
     }
@@ -41,7 +47,7 @@ function day08_part1(lines: string[]): number {
     }
 
     circuits.sort((a, b) => b.length - a.length);
-    console.log(circuits.length);
+    console.log(circuits);
     let output = 1;
     for (let i = 0; i < 3 && i < circuits.length; i++) {
         output *= circuits[i]!.length;
