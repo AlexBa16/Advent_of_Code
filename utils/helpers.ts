@@ -9,10 +9,16 @@ export function char2DArr(lines: string[]): string[][] {
     return map;
 }
 
-export function displayAsMap(map: string[][]): string {
+export function displayAsMap(map: string[][] | boolean[][]): string {
     let output: string = "";
     for (const mapElement of map) {
-        for (const string of mapElement) output += string;
+        for (const e of mapElement) {
+            if (typeof e === "boolean") {
+                if (e) {
+                    output += 'X';
+                } else output += '.';
+            } else output += e;
+        }
         output += "\n";
     }
     return output;
