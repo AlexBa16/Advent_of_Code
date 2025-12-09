@@ -1,5 +1,3 @@
-import {displayAsMap} from "../../utils/helpers.ts";
-
 function day09_part1(lines: string[]): number {
     let redTiles: { x: number, y: number }[] = [];
     for (const line of lines) {
@@ -18,30 +16,23 @@ function day09_part1(lines: string[]): number {
     return biggestArea;
 }
 
-
 function day09_part2(lines: string[]): number {
-    let width = 0;
-    let height = 0;
-    for (const line of lines) {
-        let numbers: number[] = line.split(',').map(n => Number(n));
-        if (numbers[0]! > width) width = numbers[0]!;
-        if (numbers[1]! > height) height = numbers[1]!;
-    }
-
-    const isTileValid = (x: number, y: number) =>
-        redTiles.some(p => p.x === x && p.y === y) ||
-        greenTiles.some(p => p.x === x && p.y === y);
-
+    console.log("---- creating Red Tiles ----");
     let redTiles: { x: number, y: number }[] = [];
-    let greenTiles: { x: number, y: number }[] = [];
 
     for (const line of lines) {
         let [x, y]: number[] = line.split(',').map(Number);
         redTiles.push({x: x!, y: y!});
     }
-    height++;
-    width++;
 
+    let width = Math.max(...redTiles.map(p => p.x)) + 1;
+    let height = Math.max(...redTiles.map(p => p.y)) + 1;
+    let validTiles = new Set<string>();
+    for (const tile of redTiles) validTiles.add(tile.x + ',' + tile.y);
+
+    console.log("---- creating Walls ----");
+
+    // Add green wall tiles
     for (let i = 0; i < redTiles.length; i++) {
         let pointA = redTiles[i]!;
         let pointB = redTiles[i + 1]!;
@@ -49,62 +40,43 @@ function day09_part2(lines: string[]): number {
 
         // Vertical line
         if (pointA.x === pointB.x) {
-            let startY = Math.min(pointA.y, pointB.y);
-            let endY = Math.max(pointA.y, pointB.y);
-
-            for (let y = startY; y <= endY; y++) {
-                if (!isTileValid(pointA.x, y)) greenTiles.push({x: pointA.x, y: y});
-            }
+            const [y1, y2] = [Math.min(pointA.y, pointB.y), Math.max(pointA.y, pointB.y)];
+            for (let y = y1; y <= y2; y++) validTiles.add(pointA.x + ',' + y);
         }
         // Horizontal line
-        else if (pointA.y === pointB.y) {
-            let startX = Math.min(pointA.x, pointB.x);
-            let endX = Math.max(pointA.x, pointB.x);
-
-            for (let x = startX; x <= endX; x++) {
-                if (!isTileValid(x, pointA.y)) greenTiles.push({x: x, y: pointA.y});
-            }
+        else {
+            const [x1, x2] = [Math.min(pointA.x, pointB.x), Math.max(pointA.x, pointB.x)];
+            for (let x = x1; x <= x2; x++) validTiles.add(x + ',' + pointA.y);
         }
     }
+
+    console.log("---- Fill Map ----");
+
+    const visited = new Set<string>();
+    const temp: [number, number][] = [];
+
+    for (let x = 0; x < width; x++) temp.push([x, 0], [x, height - 1]);
+    for (let y = 0; y < height; y++) temp.push([0, y], [width - 1, y]);
+    while (temp.length > 0) {
+        // console.log(temp.length);
+        const [x, y] = temp.shift()!;
+        if (x < 0 || x >= width || y < 0 || y >= height) continue;
+        const key = x + ',' + y;
+        if (visited.has(key)) continue;
+        if (validTiles.has(key)) continue;
+        visited.add(key);
+        temp.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+    }
+
 
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-            if (!isTileValid(x, y) && checkIfInsideOfWall(x, y)) greenTiles.push({x, y});
+            const key = x + ',' + y;
+            if (!visited.has(key)) validTiles.add(key);
         }
     }
 
-    function checkIfInsideOfWall(x: number, y: number) {
-        let leftWall = false, rightWall = false, topWall = false, bottomWall = false;
-        // Check left wall
-        for (let lx = x - 1; lx >= 0; lx--) {
-            if (isTileValid(lx, y)) {
-                leftWall = true;
-                break;
-            }
-        }
-        // Check right wall
-        for (let rx = x + 1; rx < width; rx++) {
-            if (isTileValid(rx, y)) {
-                rightWall = true;
-                break;
-            }
-        }
-        // Check top wall
-        for (let ty = y - 1; ty >= 0; ty--) {
-            if (isTileValid(x, ty)) {
-                topWall = true;
-                break;
-            }
-        }
-        // Check bottom wall
-        for (let by = y + 1; by < height; by++) {
-            if (isTileValid(x, by)) {
-                bottomWall = true;
-                break;
-            }
-        }
-        return leftWall && rightWall && topWall && bottomWall;
-    }
+    console.log("---- calculate Areas ----");
 
     let biggestArea: number = 0;
     for (let i = 0; i < redTiles.length; i++) {
@@ -115,8 +87,7 @@ function day09_part2(lines: string[]): number {
             let valid = true;
             for (let y = Math.min(pointA.y, pointB.y); y <= Math.max(pointA.y, pointB.y); y++) {
                 for (let x = Math.min(pointA.x, pointB.x); x <= Math.max(pointA.x, pointB.x); x++) {
-                    if (!(redTiles.some(p => p.x === x && p.y === y) ||
-                        greenTiles.some(p => p.x === x && p.y === y))) {
+                    if (!validTiles.has(x + ',' + y)) {
                         valid = false;
                         break;
                     }
