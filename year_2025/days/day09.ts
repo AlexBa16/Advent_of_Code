@@ -20,14 +20,14 @@ function day09_part1(lines: string[]): number {
 
 
 function day09_part2(lines: string[]): number {
-    let maxWidth = 0;
-    let maxHeight = 0;
+    let width = 0;
+    let height = 0;
     for (const line of lines) {
         let numbers: number[] = line.split(',').map(n => Number(n));
-        if (numbers[0]! > maxWidth) maxWidth = numbers[0]!;
-        if (numbers[1]! > maxHeight) maxHeight = numbers[1]!;
+        if (numbers[0]! > width) width = numbers[0]!;
+        if (numbers[1]! > height) height = numbers[1]!;
     }
-    let map: string[][] = Array.from({length: maxHeight + 3}, () => new Array(maxWidth + 3).fill('.'));
+    // let map: string[][] = Array.from({length: height + 1}, () => new Array(width + 1).fill('.'));
 
     const isTileValid = (x: number, y: number) =>
         redTiles.some(p => p.x === x && p.y === y) ||
@@ -41,6 +41,8 @@ function day09_part2(lines: string[]): number {
         // map[y!]![x!] = '#';
         redTiles.push({x: x!, y: y!});
     }
+    height++;
+    width++;
 
     for (let i = 0; i < redTiles.length; i++) {
         let pointA = redTiles[i]!;
@@ -75,32 +77,32 @@ function day09_part2(lines: string[]): number {
         }
     }
 
-    for (let y = 0; y < map.length; y++) {
-        for (let x = 0; x < map[y]!.length; x++) {
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
             // let point = map[y]![x]!;
             if (!isTileValid(x, y)
                 // if (point === '.'
-                && checkIfInsideOfWall(map, x, y)) {
+                && checkIfInsideOfWall(x, y)) {
                 greenTiles.push({x, y});
-                map[y]![x] = 'X';
+                // map[y]![x] = 'X';
             }
         }
     }
 
-    function checkIfInsideOfWall(map: string[][], x: number, y: number) {
+    function checkIfInsideOfWall(x: number, y: number) {
         let leftWall = false, rightWall = false, topWall = false, bottomWall = false;
         // Check left wall
         for (let lx = x - 1; lx >= 0; lx--) {
             if (isTileValid(lx, y)) {
-            // if (map[y]![lx] === '#' || map[y]![lx] === 'X') {
+                // if (map[y]![lx] === '#' || map[y]![lx] === 'X') {
                 leftWall = true;
                 break;
             }
         }
         // Check right wall
-        for (let rx = x + 1; rx < map[y]!.length; rx++) {
+        for (let rx = x + 1; rx < width; rx++) {
             if (isTileValid(rx, y)) {
-            // if (map[y]![rx] === '#' || map[y]![rx] === 'X') {
+                // if (map[y]![rx] === '#' || map[y]![rx] === 'X') {
                 rightWall = true;
                 break;
             }
@@ -108,15 +110,15 @@ function day09_part2(lines: string[]): number {
         // Check top wall
         for (let ty = y - 1; ty >= 0; ty--) {
             if (isTileValid(x, ty)) {
-            // if (map[ty]![x] === '#' || map[ty]![x] === 'X') {
+                // if (map[ty]![x] === '#' || map[ty]![x] === 'X') {
                 topWall = true;
                 break;
             }
         }
         // Check bottom wall
-        for (let by = y + 1; by < map.length; by++) {
+        for (let by = y + 1; by < height; by++) {
             if (isTileValid(x, by)) {
-            // if (map[by]![x] === '#' || map[by]![x] === 'X') {
+                // if (map[by]![x] === '#' || map[by]![x] === 'X') {
                 bottomWall = true;
                 break;
             }
@@ -127,7 +129,7 @@ function day09_part2(lines: string[]): number {
     greenTiles.sort((a, b) => a.x - b.x);
 
     console.log(greenTiles);
-    console.log(displayAsMap(map));
+    // console.log(displayAsMap(map));
 
     let biggestArea: number = 0;
     for (let i = 0; i < redTiles.length; i++) {
