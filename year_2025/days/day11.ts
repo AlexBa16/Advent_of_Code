@@ -35,23 +35,15 @@ function day11_part2(lines: string[]): number {
         connections.set(start, parts);
     }
     let output = 0;
-    connections.get("svr")?.forEach((line) => {
-        output += recursiveConnection(line, false, false, "");
-    });
+    connections.get("svr")?.forEach((line) => output += recursiveConnection(line, false, false));
     return output;
 
-    function recursiveConnection(
-        search: string,
-        visitedDAC: boolean,
-        visitedFFT: boolean,
-        list: string
-    ): number {
+    function recursiveConnection(search: string, visitedDAC: boolean, visitedFFT: boolean): number {
         const cacheKey = search + '-' + visitedDAC + '-' + visitedFFT;
         if (cache.has(cacheKey)) return cache.get(cacheKey)!;
 
         if (connectedToOut.includes(search)) {
             if (visitedDAC && visitedFFT) {
-                console.log(list);
                 cache.set(cacheKey, 1);
                 return 1;
             }
@@ -60,21 +52,12 @@ function day11_part2(lines: string[]): number {
         }
 
         let nextConnections: string[] = connections.get(search)!;
-        let temp = "";
-        if (search === "dac") {
-            visitedDAC = true;
-            temp += "DAC,";
-        }
-        if (search === "fft") {
-            visitedFFT = true;
-            temp += "FFT,";
-        }
-        if (temp === "") list += search + ",";
-        else list += temp;
+        if (search === "dac") visitedDAC = true;
+        if (search === "fft") visitedFFT = true;
 
         let result = 0;
         nextConnections?.forEach((connection) => {
-            result += recursiveConnection(connection, visitedDAC, visitedFFT, list);
+            result += recursiveConnection(connection, visitedDAC, visitedFFT);
         });
         cache.set(cacheKey, result);
         return result;
